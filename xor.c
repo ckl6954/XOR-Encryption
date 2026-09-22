@@ -52,26 +52,47 @@ void decryptFile(const char *filename, const char *key) {
 int main() {
     char choice[20];
     printf("Enter 'encrypt' or 'decrypt': ");
-    scanf("%19s", choice);
+    if (fgets(choice, sizeof(choice), stdin) == NULL) {
+        printf("Invalid choice.\n");
+        return 1;
+    }
+    choice[strcspn(choice, "\n")] = '\0';
 
-    if (strcmp(choice, "encrypt") == 0) {
-        char message[256], filename[256], key[256];
+    if (strncmp(choice, "encrypt", sizeof("encrypt")) == 0) {
+        char filename[50], message[256], key[256];
+        printf("Enter the filename: ");
+        if (fgets(filename, sizeof(filename), stdin) == NULL || filename[0] == '\n') {
+            printf("Invalid choice.\n");
+            return 1;
+        }
+        filename[strcspn(filename, "\n")] = '\0';
         printf("Enter the message to encrypt: ");
-        fgets(message, sizeof(message), stdin);
+        if (fgets(message, sizeof(message), stdin) == NULL || message[0] == '\n') {
+            printf("Invalid choice.\n");
+            return 1;
+        }
         message[strcspn(message, "\n")] = '\0';
-        printf("Enter the filename to save encrypted data: ");
-        scanf("%19s", filename);
         printf("Enter the encryption key: ");
-        scanf("%19s", key);
-
+        if (fgets(key, sizeof(key), stdin) == NULL || key[0] == '\n') {
+            printf("Invalid choice.\n");
+            return 1;
+        }
+        key[strcspn(key, "\n")] = '\0';
         encryptFile(filename, message, key);
-    } else if (strcmp(choice, "decrypt") == 0) {
-        char filename[256], key[256];
-        printf("Enter the filename to decrypt: ");
-        scanf("%19s", filename);
+    } else if (strncmp(choice, "decrypt", sizeof(choice)) == 0) {
+        char key[256], filename[50];
+        printf("Enter the filename: ");
+        if (fgets(filename, sizeof(filename), stdin) == NULL || filename[0] == '\n') {
+            printf("Invalid choice.\n");
+            return 1;
+        }
+        filename[strcspn(filename, "\n")] = '\0';
         printf("Enter the decryption key: ");
-        scanf("%19s", key);
-
+        if (fgets(key, sizeof(key), stdin) == NULL || key[0] == '\n') {
+            printf("Invalid choice.\n");
+            return 1;
+        }
+        key[strcspn(key, "\n")] = '\0';
         decryptFile(filename, key);
     } else {
         printf("Invalid choice.\n");
